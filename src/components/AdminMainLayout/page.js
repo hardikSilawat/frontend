@@ -85,20 +85,6 @@ const menuItems = [
       //   description: "Organize product subcategories",
       //   icon: <ClassIcon fontSize="small" sx={{ color: "secondary.main" }} />,
       // },
-      // {
-      //   text: "Tags",
-      //   path: "/admin/products/tags",
-      //   description: "Manage product tags",
-      //   icon: (
-      //     <LocalOfferIcon fontSize="small" sx={{ color: "success.main" }} />
-      //   ),
-      // },
-      // {
-      //   text: "Attributes",
-      //   path: "/admin/products/attributes",
-      //   description: "Manage product attributes",
-      //   icon: <StyleIcon fontSize="small" sx={{ color: "warning.main" }} />,
-      // },
     ],
   },
   { divider: true },

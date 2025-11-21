@@ -26,6 +26,7 @@ const DynamicForm = ({
   spacing = 2,
   submitButtonProps = {},
   cancelButtonProps = {},
+  gridProps = {},
 }) => {
   const [formState, setFormState] = useState({
     isSubmitting: false,
@@ -112,18 +113,17 @@ const DynamicForm = ({
     <Box component="form" onSubmit={handleSubmit(handleFormSubmit)} noValidate>
       <Grid container spacing={spacing}>
         {title && (
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Typography variant="h6" gutterBottom>
               {title}
             </Typography>
             <Divider sx={{ mb: 2 }} />
           </Grid>
         )}
-
         {fields.map((field) => (
           <React.Fragment key={field.name}>
             {field.type === "divider" ? (
-              <Grid item xs={12}>
+              <Grid item {...field.gridProps}>
                 <Divider sx={{ my: 2 }} />
                 {field.label && (
                   <Typography variant="subtitle2" color="text.secondary">
@@ -132,39 +132,38 @@ const DynamicForm = ({
                 )}
               </Grid>
             ) : (
-              renderField(
-                {
-                  ...field,
-                  inputRef:
-                    fileInputRefs.current[field.name] ||
-                    (fileInputRefs.current[field.name] = { current: null }),
-                },
-                {
-                  control,
-                  errors,
-                  formState,
-                  filePreviews,
-                  setFilePreviews,
-                  showPassword,
-                  setShowPassword,
-                }
-              )
+              <Grid item {...(field.gridProps || {})}>
+                {renderField(
+                  {
+                    ...field,
+                    inputRef:
+                      fileInputRefs.current[field.name] ||
+                      (fileInputRefs.current[field.name] = { current: null }),
+                  },
+                  {
+                    control,
+                    errors,
+                    formState,
+                    filePreviews,
+                    setFilePreviews,
+                    showPassword,
+                    setShowPassword,
+                  }
+                )}
+              </Grid>
             )}
           </React.Fragment>
         ))}
-
         {formState.error && (
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Typography color="error" variant="body2">
               {formState.error}
             </Typography>
           </Grid>
         )}
-
         {showActions && (
           <Grid
-            item
-            xs={12}
+            size={12}
             sx={{
               mt: 1,
               display: "flex",

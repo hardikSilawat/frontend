@@ -8,7 +8,6 @@ import {
   TextField,
   InputAdornment,
   Chip,
-  Avatar,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -16,93 +15,93 @@ import {
   IconButton,
   Tooltip,
   CircularProgress,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  FormHelperText,
 } from "@mui/material";
 import { Add, Search, Edit, Delete, Close } from "@mui/icons-material";
-import DynamicForm from "@/components/Admin/DynamicForm";
-import { DataTable } from "@/components/Admin/page";
 import AdminMainLayout from "@/components/AdminMainLayout/page";
+import DynamicForm from "@/components/Admin/DynamicForm";
 import { api } from "@/apiHandler/page";
 import { toast } from "react-toastify";
 import { useConfirm } from "@/hooks/useConfirm";
 import theme from "@/app/theme";
+import { DataTable } from "@/components/Admin/page";
 
-export default function UsersPage() {
+export default function SubtopicsPage() {
   const [state, setState] = useState({
-    users: [],
+    subtopics: [],
+    topics: [],
     loading: true,
     page: 0,
     rowsPerPage: 10,
     totalRows: 0,
     searchTerm: "",
+    selectedTopic: "",
+    difficulty: "",
+    status: "",
   });
-  const [userToUpdate, setUserToUpdate] = useState(null);
+
+  const [subtopicToUpdate, setSubtopicToUpdate] = useState(null);
   const [openForm, setOpenForm] = useState(false);
   const { confirm } = useConfirm();
   const controllerRef = useRef(null);
 
-  const fetchUsers = useCallback(
+  const fetchSubtopics = useCallback(
     async (signal) => {
       try {
         setState((prev) => ({ ...prev, loading: true }));
 
-        // Build query parameters
         const params = new URLSearchParams({
           page: state.page + 1,
           limit: state.rowsPerPage,
         });
 
-        // Add search term if it exists
-        if (state.searchTerm) {
-          params.append("search", state.searchTerm);
-        }
+        if (state.searchTerm) params.append("search", state.searchTerm);
+        if (state.selectedTopic) params.append("topic", state.selectedTopic);
+        if (state.difficulty) params.append("difficulty", state.difficulty);
+        if (state.status) params.append("status", state.status);
 
-        const response = await api.get(`/auth/admin/users?${params.toString()}`, {
+        const response = await api.get(`/subtopics?${params.toString()}`, {
           signal,
         });
 
         if (response.success) {
           setState((prev) => ({
             ...prev,
-            users: response.data.users,
-            totalRows: response.data.pagination.total,
+            subtopics: response.data.subtopics || [],
+            totalRows: response.data.pagination?.total || 0,
             loading: false,
           }));
         } else {
-          throw new Error(response.message || "Failed to fetch users");
+          throw new Error(response.message || "Failed to fetch subtopics");
         }
       } catch (error) {
         if (error.name !== "AbortError") {
-          console.error("Error fetching users:", error);
+          console.error("Error fetching subtopics:", error);
           setState((prev) => ({
             ...prev,
             loading: false,
-            error: error.response?.data?.message || "Failed to fetch users",
+            error: error.response?.data?.message || "Failed to fetch subtopics",
           }));
-          toast.error(error.response?.data?.message || "Failed to fetch users");
+          toast.error(error.response?.data?.message || "Failed to fetch subtopics");
         }
       }
     },
-    [state.page, state.rowsPerPage, state.searchTerm]
+    [state.page, state.rowsPerPage, state.searchTerm, state.selectedTopic, state.difficulty, state.status]
   );
 
-  // Debounce search with request cancellation
   useEffect(() => {
-    // Cancel previous request if it exists
     if (controllerRef.current) {
       controllerRef.current.abort();
     }
 
-    // Create new AbortController for this request
     controllerRef.current = new AbortController();
-
-    // Only search if search term is empty or has at least 2 characters
-    const shouldSearch = !state.searchTerm || state.searchTerm.length >= 2;
-
     const timer = setTimeout(() => {
-      if (shouldSearch || state.searchTerm === "") {
-        fetchUsers(controllerRef.current.signal);
-      }
-    }, 300); // Reduced debounce time for better UX
+      fetchSubtopics(controllerRef.current.signal);
+    }, 300);
 
     return () => {
       clearTimeout(timer);
@@ -110,7 +109,26 @@ export default function UsersPage() {
         controllerRef.current.abort();
       }
     };
-  }, [fetchUsers, state.searchTerm]);
+  }, [fetchSubtopics]);
+
+  useEffect(() => {
+    const fetchTopics = async () => {
+      try {
+        const response = await api.get("/topics?limit=1000");
+        if (response.success) {
+          setState((prev) => ({
+            ...prev,
+            topics: response.data.topics || [],
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching topics:", error);
+        toast.error("Failed to load topics");
+      }
+    };
+
+    fetchTopics();
+  }, []);
 
   const handlePageChange = (_, newPage) => {
     setState((prev) => ({ ...prev, page: newPage }));
@@ -132,71 +150,68 @@ export default function UsersPage() {
     }));
   };
 
-  const handleDelete = async (user) => {
+  const handleAdd = () => {
+    setSubtopicToUpdate(null);
+    setOpenForm(true);
+  };
+
+  const handleEdit = (subtopic) => {
+    setSubtopicToUpdate({
+      ...subtopic,
+      topicId: subtopic.topic?._id,
+    });
+    setOpenForm(true);
+  };
+
+  const handleCloseForm = () => {
+    setOpenForm(false);
+    setSubtopicToUpdate(null);
+  };
+
+  const handleDelete = async (subtopic) => {
     try {
       await confirm({
         type: "error",
-        title: "Delete User",
-        message: `Are you sure you want to delete ${user.name}?`,
+        title: "Delete Subtopic",
+        message: `Are you sure you want to delete ${subtopic.name}?`,
         confirmText: "Delete",
         details: [
-          { label: "Email", value: user.email },
-          { label: "Role", value: user.role },
+          { label: "Difficulty", value: subtopic.difficulty || "Not set" },
+          { label: "Status", value: subtopic.status || "pending" },
         ],
         onConfirm: async () => {
           try {
-            const response = await api.delete(`/auth/admin/delete-user/${user._id}`);
+            const response = await api.delete(`/subtopics/${subtopic._id}`);
             if (response.success) {
-              fetchUsers();
-              toast.success("User deleted successfully");
+              fetchSubtopics();
+              toast.success("Subtopic deleted successfully");
             } else {
-              throw new Error(response.message || "Failed to delete user");
+              throw new Error(response.message || "Failed to delete subtopic");
             }
           } catch (error) {
             console.error("API Error:", error);
-            throw error; // This will trigger the catch block below
+            throw error;
           }
         },
       });
     } catch (error) {
       if (error !== "cancelled") {
         console.error("Error in confirmation:", error);
-        toast.error(error.response?.data?.message || "Failed to delete user");
+        toast.error(error.response?.data?.message || "Failed to delete subtopic");
       }
     }
   };
 
-  const handleAdd = () => {
-    setUserToUpdate(null);
-    setOpenForm(true);
-  };
-
-  const handleEdit = (user) => {
-    setUserToUpdate(user);
-    setOpenForm(true);
-  };
-
-  const handleCloseForm = () => {
-    setOpenForm(false);
-    setUserToUpdate(null);
-  };
-
-  const handleSubmitUser = async (data) => {
-    const isUpdate = Boolean(userToUpdate);
-    const endpoint = isUpdate
-      ? `/auth/admin/update-details/${userToUpdate._id}`
-      : "/auth/register";
+  const handleSubmitSubtopic = async (data) => {
+    const isUpdate = Boolean(subtopicToUpdate);
+    const endpoint = isUpdate ? `/subtopics/${subtopicToUpdate._id}` : "/subtopics";
     const method = isUpdate ? "put" : "post";
-    const successMessage = isUpdate
-      ? "User updated successfully"
-      : "User created successfully";
 
     try {
       const payload = {
-        name: data.name,
-        email: data.email,
-        role: data.role,
-        ...(!isUpdate && { password: data.password }), // Only include password for new users
+        ...data,
+        topic: data.topicId,
+        order: parseInt(data.order) || 0,
       };
 
       const response = await api[method](endpoint, payload);
@@ -207,11 +222,15 @@ export default function UsersPage() {
           : response.message;
         throw new Error(errorMessage);
       }
-      toast.success(response.message || successMessage);
-      fetchUsers();
+
+      toast.success(
+        response.message ||
+          `Subtopic ${isUpdate ? 'updated' : 'created'} successfully`
+      );
+      fetchSubtopics();
       handleCloseForm();
     } catch (error) {
-      console.error(`Error ${isUpdate ? "updating" : "saving"} user:`, error);
+      console.error(`Error ${isUpdate ? "updating" : "saving"} subtopic:`, error);
       toast.error(
         error.response?.data?.message || error.message || "An error occurred"
       );
@@ -220,117 +239,55 @@ export default function UsersPage() {
 
   const columns = [
     {
-      field: "user",
-      headerName: "User",
+      field: "name",
+      headerName: "Subtopic",
+      minWidth: 200,
       flex: 1,
-      minWidth: 240,
       render: (row) => (
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, py: 1 }}>
-          <Avatar
-            src={row.avatar}
-            alt={row.name}
-            sx={{
-              width: 40,
-              height: 40,
-              bgcolor: "primary.main",
-              color: "white",
-              fontSize: "1rem",
-              fontWeight: 600,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {row.name ? row.name.charAt(0).toUpperCase() : "U"}
-          </Avatar>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Box>
             <Typography
-              variant="subtitle2"
-              sx={{
-                fontWeight: 500,
-                color: "text.primary",
-                lineHeight: 1.3,
-                textTransform: "capitalize",
-              }}
+              variant="subtitle1"
+              fontWeight={500}
+              textTransform="capitalize"
             >
-              {row.name || "Unknown User"}
+              {row.name}
             </Typography>
-            <Typography
-              variant="caption"
-              sx={{
-                display: "block",
-                color: "text.secondary",
-                fontSize: "0.7rem",
-                lineHeight: 1.3,
-                mt: 0.25,
-              }}
-            >
-              ID: {row._id}
-            </Typography>
+            {row.topic?.name && (
+              <Typography variant="caption" color="text.secondary">
+                Topic: {row.topic.name}
+              </Typography>
+            )}
           </Box>
         </Box>
       ),
     },
     {
-      field: "email",
-      headerName: "Email",
-      flex: 1,
-      minWidth: 200,
-      render: (row) => (
-        <Typography
-          variant="body2"
-          sx={{
-            color: "text.primary",
-            fontSize: "0.875rem",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            maxWidth: "100%",
-            display: "inline-block",
-            verticalAlign: "middle",
-          }}
-        >
-          {row.email}
-        </Typography>
-      ),
-    },
-
-    {
-      field: "role",
-      headerName: "Role",
-      width: 100,
-      headerAlign: "center",
-      align: "center",
+      field: "difficulty",
+      headerName: "Difficulty",
+      width: 120,
       render: (row) => {
-        const role = row.role?.toLowerCase() || "user";
-        const roleConfig = {
-          admin: { bg: "#1976d2", hover: "#1565c0" },
-          user: { bg: "#4caf50", hover: "#388e3c" },
+        const difficulty = row.difficulty?.toLowerCase() || '';
+        const colorMap = {
+          easy: 'success',
+          medium: 'warning',
+          tough: 'error',
         };
-
-        const displayRole = role.charAt(0).toUpperCase() + role.slice(1);
-
+        
         return (
           <Chip
-            label={displayRole}
+            label={difficulty || 'Not set'}
+            color={colorMap[difficulty] || 'default'}
             size="small"
-            variant="filled"
-            sx={{
-              fontWeight: 500,
-              minWidth: 70,
-              color: "white",
-              backgroundColor: roleConfig[role].bg,
-              "&:hover": { backgroundColor: roleConfig[role].hover },
-              "& .MuiChip-label": { px: 1.5, py: 0.5 },
-            }}
+            variant="outlined"
           />
         );
       },
     },
     {
       field: "createdAt",
-      headerName: "Created At",
-      width: 120,
+      headerName: "Created",
+      width: 150,
       render: (row) => (
         <Box>
           <Typography variant="body2">
@@ -338,13 +295,45 @@ export default function UsersPage() {
               ? new Date(row.createdAt).toLocaleDateString()
               : "N/A"}
           </Typography>
-          <Typography variant="caption" color="text.secondary">
-            {row.updatedAt
-              ? `Updated: ${new Date(row.updatedAt).toLocaleDateString()}`
-              : ""}
-          </Typography>
+          {row.updatedAt && (
+            <Typography variant="caption" color="text.secondary">
+              Updated: {new Date(row.updatedAt).toLocaleDateString()}
+            </Typography>
+          )}
         </Box>
       ),
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 120,
+      headerAlign: "center",
+      align: "center",
+      render: (row) => {
+        const status = row.status?.toLowerCase() || 'pending';
+        const statusConfig = {
+          completed: { bg: "#4caf50", hover: "#388e3c" },
+          pending: { bg: "#ff9800", hover: "#f57c00" },
+        };
+
+        return (
+          <Chip
+            label={status.charAt(0).toUpperCase() + status.slice(1)}
+            size="small"
+            variant="filled"
+            sx={{
+              fontWeight: 500,
+              minWidth: 100,
+              color: "white",
+              backgroundColor: statusConfig[status]?.bg || "default",
+              "&:hover": {
+                backgroundColor: statusConfig[status]?.hover || "default",
+              },
+              "& .MuiChip-label": { px: 1.5, py: 0.5 },
+            }}
+          />
+        );
+      },
     },
     {
       field: "actions",
@@ -352,13 +341,14 @@ export default function UsersPage() {
       width: 120,
       align: "right",
       render: (row) => (
-        <Box
-          sx={{ display: "flex", justifyContent: "flex-end", gap: 1, pr: 1 }}
-        >
-          <Tooltip title="Edit user">
+        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, pr: 1 }}>
+          <Tooltip title="Edit subtopic">
             <IconButton
               size="small"
-              onClick={() => handleEdit(row)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleEdit(row);
+              }}
               sx={{
                 "&:hover": {
                   backgroundColor: "action.hover",
@@ -370,10 +360,13 @@ export default function UsersPage() {
             </IconButton>
           </Tooltip>
 
-          <Tooltip title="Delete user">
+          <Tooltip title="Delete subtopic">
             <IconButton
               size="small"
-              onClick={() => handleDelete(row)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDelete(row);
+              }}
               sx={{
                 "&:hover": {
                   backgroundColor: "action.hover",
@@ -417,57 +410,19 @@ export default function UsersPage() {
               textShadow: "0 0 5px rgba(0, 0, 0, 0.1)",
             }}
           >
-            Users ({state?.totalRows})
+            Subtopics ({state.totalRows || 0})
           </Typography>
           <Button
             variant="contained"
+            color="primary"
             startIcon={<Add />}
             onClick={handleAdd}
-            sx={{
-              fontWeight: 600,
-              fontSize: "0.875rem",
-              letterSpacing: "0.5px",
-              textTransform: "none",
-              // padding: '8px 20px',
-              borderRadius: "8px",
-              boxShadow:
-                "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-              background: `linear-gradient(45deg, ${theme.palette.primary.main} 0%, #3cb815 100%)`,
-              transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-              position: "relative",
-              overflow: "hidden",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow:
-                  "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
-                "&::after": {
-                  transform: "translateX(0%)",
-                },
-              },
-              "&::after": {
-                content: '""',
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                background: "rgba(255, 255, 255, 0.1)",
-                transform: "translateX(-100%)",
-                transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
-              },
-              "& .MuiButton-startIcon": {
-                transition: "transform 0.3s ease",
-              },
-              "&:hover .MuiButton-startIcon": {
-                transform: "scale(1.1)",
-              },
-            }}
           >
-            Add User
+            Add Subtopic
           </Button>
         </Box>
 
-        <Box
+        <Paper
           elevation={0}
           sx={{
             mb: 3,
@@ -485,7 +440,7 @@ export default function UsersPage() {
           <TextField
             fullWidth
             variant="outlined"
-            placeholder="Search users by name or email..."
+            placeholder="Search subtopics..."
             value={state.searchTerm}
             onChange={handleSearch}
             disabled={state.loading}
@@ -532,20 +487,20 @@ export default function UsersPage() {
                       ? "text.secondary"
                       : "transparent",
                   fontSize: "0.75rem",
-                  height: "1.2rem", // Prevent layout shift
+                  height: "1.2rem",
                 }}
               >
-                {
-                  state.searchTerm && state.searchTerm.length < 2
-                    ? "Type at least 2 characters to search"
-                    : " " // Empty space to maintain consistent height
-                }
+                {state.searchTerm && state.searchTerm.length < 2
+                  ? "Type at least 2 characters to search"
+                  : " "}
               </Box>
             }
           />
+        </Paper>
 
+        <Paper sx={{ position: "relative", minHeight: 400 }}>
           <DataTable
-            rows={state.users}
+            rows={state.subtopics}
             columns={columns}
             loading={state.loading}
             page={state.page}
@@ -553,129 +508,175 @@ export default function UsersPage() {
             totalRows={state.totalRows}
             onPageChange={handlePageChange}
             onRowsPerPageChange={handleRowsPerPageChange}
-            emptyMessage="No users found"
+            emptyMessage="No subtopics found"
           />
-        </Box>
+        </Paper>
+      </Box>
 
-        <Dialog
-          open={openForm}
-          onClose={handleCloseForm}
-          maxWidth="md"
-          fullWidth
+      <Dialog open={openForm} onClose={handleCloseForm} maxWidth="md" fullWidth>
+        <DialogTitle
+          sx={{
+            m: 0,
+            p: 2.5,
+            background: `linear-gradient(195deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+            color: "white",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            "& .MuiTypography-root": {
+              fontWeight: 600,
+              letterSpacing: "0.5px",
+            },
+          }}
         >
-          <DialogTitle
+          <Box>
+            <Typography variant="h5" fontWeight="bold">
+              {subtopicToUpdate ? 'Edit' : 'Add New'} Subtopic
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{ opacity: 0.8, display: "block", mt: 0.5 }}
+            >
+              {subtopicToUpdate
+                ? "Update the subtopic details"
+                : "Fill in the details to add a new subtopic"}
+            </Typography>
+          </Box>
+
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseForm}
             sx={{
-              m: 0,
-              p: 2.5,
-              background: `linear-gradient(195deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              "& .MuiTypography-root": {
-                fontWeight: 600,
-                letterSpacing: "0.5px",
-              },
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: "common.white",
             }}
           >
-            <Box>
-              <Typography variant="h6" component="div">
-                {userToUpdate ? "Edit User" : "Add New User"}
-              </Typography>
-              <Typography
-                variant="caption"
-                sx={{ opacity: 0.8, display: "block", mt: 0.5 }}
-              >
-                {userToUpdate
-                  ? "Update the user details"
-                  : "Fill in the details to add a new user"}
-              </Typography>
-            </Box>
-            <IconButton
-              aria-label="close"
-              onClick={handleCloseForm}
-              sx={{
-                position: "absolute",
-                right: 8,
-                top: 8,
-                color: "common.white",
-              }}
-            >
-              <Close />
-            </IconButton>
-          </DialogTitle>
-          <DialogContent dividers>
-            <DynamicForm
-              fields={[
-                {
-                  name: "name",
-                  label: "Full Name",
-                  type: "text",
-                  required: true,
-                  gridProps: { size: { xs: 12, sm: 12, md: 6 } },
-                },
-                {
-                  name: "email",
-                  label: "Email",
-                  type: "email",
-                  required: true,
-                  gridProps: { size: { xs: 12, sm: 12, md: 6 } },
-                },
-                ...(!userToUpdate
-                  ? [
-                      {
-                        name: "password",
-                        label: "Password",
-                        type: "password",
-                        required: true,
-                        gridProps: { size: { xs: 12, sm: 12, md: 6 } },
-                      },
-                    ]
-                  : []),
-
-                {
-                  name: "role",
-                  label: "Role",
-                  type: "select",
-                  options: [
-                    { value: "user", label: "User" },
-                    { value: "admin", label: "Admin" },
-                  ],
-                  required: true,
-                  gridProps: { size: { xs: 12, sm: 12, md: 6 } },
-                },
-              ]}
-              initialValues={
-                userToUpdate || {
-                  name: "",
-                  email: "",
-                  role: "user",
-                  password: "",
-                }
-              }
-              onSubmit={handleSubmitUser}
-              onCancel={handleCloseForm}
-              submitText={userToUpdate ? "Update User" : "Add User"}
-              validationSchema={{
-                email: [
-                  {
-                    test: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-                    message: "Please enter a valid email address",
-                  },
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers>
+          <DynamicForm
+            fields={[
+              {
+                name: "topicId",
+                label: "Topic",
+                type: "select",
+                options: state.topics.map((topic) => ({
+                  value: topic._id,
+                  label: topic.name,
+                })),
+                required: true,
+                gridProps: { size: { xs: 12, sm: 12, md: 6 } },
+              },
+              {
+                name: "name",
+                label: "Subtopic Name",
+                type: "text",
+                required: true,
+                gridProps: { size: { xs: 12, sm: 12, md: 6 } },
+              },
+              {
+                name: "difficulty",
+                label: "Difficulty",
+                type: "select",
+                options: [
+                  { value: 'easy', label: 'Easy' },
+                  { value: 'medium', label: 'Medium' },
+                  { value: 'tough', label: 'Tough' },
                 ],
-                ...(!userToUpdate && {
-                  password: [
-                    {
-                      test: (value) => value && value.length >= 6,
-                      message: "Password must be at least 6 characters long",
-                    },
-                  ],
-                }),
-              }}
-            />
-          </DialogContent>
-        </Dialog>
-      </Box>
+                required: true,
+                gridProps: { size: { xs: 12, sm: 6, md: 4 } },
+              },
+              {
+                name: "status",
+                label: "Status",
+                type: "select",
+                options: [
+                  { value: 'pending', label: 'Pending' },
+                  { value: 'completed', label: 'Completed' },
+                ],
+                required: true,
+                gridProps: { size: { xs: 12, sm: 6, md: 4 } },
+              },
+              {
+                name: "order",
+                label: "Order",
+                type: "number",
+                required: true,
+                inputProps: { min: 0 },
+                gridProps: { size: { xs: 12, sm: 6, md: 4 } },
+              },
+              {
+                name: "youtubeLink",
+                label: "YouTube Link",
+                type: "url",
+                gridProps: { size: { xs: 12, sm: 6, md: 4 } },
+              },
+              {
+                name: "leetcodeLink",
+                label: "LeetCode Link",
+                type: "url",
+                gridProps: { size: { xs: 12, sm: 6, md: 4 } },
+              },
+              {
+                name: "articleLink",
+                label: "Article Link",
+                type: "url",
+                gridProps: { size: { xs: 12, sm: 6, md: 4 } },
+              },
+            ]}
+            initialValues={
+              subtopicToUpdate || {
+                name: "",
+                topicId: "",
+                difficulty: "easy",
+                status: "pending",
+                order: 0,
+                youtubeLink: "",
+                leetcodeLink: "",
+                articleLink: "",
+              }
+            }
+            onSubmit={handleSubmitSubtopic}
+            onCancel={handleCloseForm}
+            submitText={subtopicToUpdate ? "Update Subtopic" : "Add Subtopic"}
+            validationSchema={{
+              name: [
+                {
+                  test: (value) => value && value.trim().length > 0,
+                  message: "Subtopic name is required",
+                },
+              ],
+              topicId: [
+                {
+                  test: (value) => !!value,
+                  message: "Please select a topic",
+                },
+              ],
+              difficulty: [
+                {
+                  test: (value) => ['easy', 'medium', 'tough'].includes(value),
+                  message: "Please select a valid difficulty",
+                },
+              ],
+              status: [
+                {
+                  test: (value) => ['pending', 'completed'].includes(value),
+                  message: "Please select a valid status",
+                },
+              ],
+              order: [
+                {
+                  test: (value) => !isNaN(parseInt(value)),
+                  message: "Order must be a number",
+                },
+              ],
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </AdminMainLayout>
   );
 }

@@ -220,7 +220,7 @@ export default function TopicsPage() {
         const colorMap = {
           easy: "success",
           medium: "warning",
-          hard: "error",
+          tough: "error",
         };
         return (
           <Chip
@@ -273,14 +273,14 @@ export default function TopicsPage() {
       type: "text",
       required: true,
       fullWidth: true,
-      gridProps: { xs: 12 },
+      gridProps: { size: { xs: 12, sm: 12, md: 12 } },
     },
     {
       name: "description",
       label: "Description",
       type: "textarea",
       fullWidth: true,
-      gridProps: { xs: 12 },
+      gridProps: { size: { xs: 12, sm: 12, md: 12 } },
       multiline: true,
       rows: 3,
     },
@@ -292,9 +292,9 @@ export default function TopicsPage() {
       options: [
         { value: "easy", label: "Easy" },
         { value: "medium", label: "Medium" },
-        { value: "hard", label: "Hard" },
+        { value: "tough", label: "Tough" },
       ],
-      gridProps: { xs: 12, sm: 6 },
+      gridProps: { size: { xs: 12, sm: 12, md: 12 } },
     },
   ];
 
