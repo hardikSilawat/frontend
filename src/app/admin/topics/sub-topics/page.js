@@ -560,7 +560,7 @@ export default function UsersPage() {
         <Dialog
           open={openForm}
           onClose={handleCloseForm}
-          maxWidth="sm"
+          maxWidth="md"
           fullWidth
         >
           <DialogTitle

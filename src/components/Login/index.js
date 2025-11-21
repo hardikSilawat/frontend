@@ -1,20 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { setUser } from "@/redux/reducers";
+import api from "@/apiHandler/page";
 import {
   Box,
-  Button,
-  TextField,
   Typography,
   Paper,
   InputAdornment,
-  IconButton,
+  Link as MuiLink,
+  Button,
   CircularProgress,
-  Alert,
+  IconButton,
   Fade,
   useTheme,
   useMediaQuery,
+  TextField,
 } from "@mui/material";
 import {
   LockOutlined,
@@ -26,91 +32,75 @@ import {
 } from "@mui/icons-material";
 import Link from "next/link";
 
-const LoginForm = ({ isAdmin = false }) => {
+const LoginForm = ({ isAdmin = false, onSuccess, authModal = true }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const router = useRouter();
-
-  const [state, setState] = useState({
-    formData: {
-      email: "",
-      password: "",
-    },
-    showPassword: false,
-    isLoading: false,
-    error: "",
+  const dispatch = useDispatch();
+  const userToken = Cookies.get("UserToken");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
   });
-
-  const { formData, showPassword, isLoading, error } = state;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setState((prev) => ({
+    setFormData((prev) => ({
       ...prev,
-      formData: {
-        ...prev.formData,
-        [name]: value,
-      },
+      [name]: value,
     }));
   };
 
   const togglePasswordVisibility = () => {
-    setState((prev) => ({
-      ...prev,
-      showPassword: !prev.showPassword,
-    }));
+    setShowPassword((prev) => !prev);
   };
 
-  const validateForm = (email, password) => {
-    if (!email.trim()) {
-      return { isValid: false, error: "Email is required" };
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return { isValid: false, error: "Please enter a valid email address" };
-    }
-
-    if (!password) {
-      return { isValid: false, error: "Password is required" };
-    }
-
-    if (password.length < 6) {
-      return {
-        isValid: false,
-        error: "Password must be at least 6 characters long",
-      };
-    }
-
-    return { isValid: true, error: "" };
-  };
-
-  // Update the handleSubmit function
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const { isValid, error } = validateForm(formData.email, formData.password);
-    if (!isValid) {
-      setState((prev) => ({ ...prev, error }));
-      return;
-    }
-
-    setState((prev) => ({ ...prev, isLoading: true, error: "" }));
+    setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const response = await api.post("/auth/login", {
+        ...formData,
+        role: isAdmin ? "admin" : "user",
+      });
 
-      // For demo: Redirect based on user type
-      const targetRoute = isAdmin ? "/admin/dashboard" : "/dashboard";
-      router.push(targetRoute);
+      if (response.status === 200) {
+        toast.success(response?.message || "Login successful!");
+        const tokenName = isAdmin ? "AdminToken" : "UserToken";
+
+        // In your handleSubmit function:
+        Cookies.set(tokenName, response?.data?.token, {
+          expires: 100 * 365,
+          path: "/",
+          secure: true,
+          sameSite: "strict",
+        });
+
+        dispatch(setUser(response.data.user));
+
+        const targetRoute = isAdmin ? "/admin/dashboard" : "/dashboard";
+        router.push(targetRoute);
+
+        onSuccess?.();
+        return { success: true, message: "Login successful!" };
+      } else {
+        const errorMessage =
+          response?.message || "Login failed. Please try again.";
+        toast.error(errorMessage);
+        return { success: false, message: errorMessage };
+      }
     } catch (err) {
-      setState((prev) => ({
-        ...prev,
-        error: "Invalid credentials. Please try again.",
-      }));
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "An error occurred during login.";
+      toast.error(errorMessage);
+      return { success: false, message: errorMessage };
     } finally {
-      setState((prev) => ({ ...prev, isLoading: false }));
+      setIsLoading(false);
     }
   };
 
@@ -164,12 +154,6 @@ const LoginForm = ({ isAdmin = false }) => {
               : "Sign in to continue"}
           </Typography>
         </Box>
-
-        {error && (
-          <Alert severity="error" sx={{ mb: 3, borderRadius: 1 }}>
-            {error}
-          </Alert>
-        )}
 
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <TextField
@@ -289,7 +273,7 @@ const LoginForm = ({ isAdmin = false }) => {
             <Typography variant="body2" color="text.secondary">
               {isAdmin ? (
                 <>
-                  User?{" "}
+                  User ?{" "}
                   <Typography
                     component={Link}
                     href="/login"
@@ -307,7 +291,7 @@ const LoginForm = ({ isAdmin = false }) => {
                 </>
               ) : (
                 <>
-                  Admin?{" "}
+                  Admin ?{" "}
                   <Typography
                     component={Link}
                     href="/admin/login"
@@ -320,7 +304,7 @@ const LoginForm = ({ isAdmin = false }) => {
                       },
                     }}
                   >
-                    Admin Login
+                    Go to Admin Login
                   </Typography>
                 </>
               )}
