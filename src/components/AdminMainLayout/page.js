@@ -189,8 +189,6 @@ export default function AdminMainLayout({ children, window }) {
     <Box>
       <DrawerHeader>
         <Box
-          component={Link}
-          href="/"
           sx={{
             my: 0.5,
             display: "flex",
