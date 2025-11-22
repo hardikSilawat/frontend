@@ -79,12 +79,6 @@ const menuItems = [
         description: "Organize product categories",
         icon: <CategoryIcon fontSize="small" sx={{ color: "primary.main" }} />,
       },
-      // {
-      //   text: "Sub Categories",
-      //   path: "/admin/products/subcategories",
-      //   description: "Organize product subcategories",
-      //   icon: <ClassIcon fontSize="small" sx={{ color: "secondary.main" }} />,
-      // },
     ],
   },
   { divider: true },
@@ -712,12 +706,6 @@ export default function AdminMainLayout({ children, window }) {
               </MenuItem>
               <Divider />
 
-              <MenuItem component={Link} href="/admin/settings">
-                <ListItemIcon>
-                  <SettingsIcon fontSize="small" />
-                </ListItemIcon>
-                <Typography>Settings</Typography>
-              </MenuItem>
               <MenuItem onClick={handleLogout}>
                 <ListItemIcon>
                   <LogoutIcon fontSize="small" color="error" />

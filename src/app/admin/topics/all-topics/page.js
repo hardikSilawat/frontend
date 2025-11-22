@@ -114,10 +114,7 @@ export default function TopicsPage() {
         title: "Delete Topic",
         message: `Are you sure you want to delete "${topic.name}"?`,
         confirmText: "Delete",
-        details: [
-          { label: "Name", value: topic.name },
-          { label: "Difficulty", value: topic.difficulty },
-        ],
+        details: [{ label: "Name", value: topic.name }],
         onConfirm: async () => {
           try {
             const response = await api.delete(`/topics/${topic._id}`);
@@ -168,7 +165,6 @@ export default function TopicsPage() {
       const payload = {
         name: data.name,
         description: data.description || "",
-        difficulty: data.difficulty,
         isActive: data.isActive !== false,
       };
 
@@ -202,34 +198,23 @@ export default function TopicsPage() {
       ),
     },
     {
-      field: "slug",
-      headerName: "Slug",
-      flex: 1,
-      minWidth: 150,
+      field: "createdAt",
+      headerName: "Created",
+      width: 150,
       render: (row) => (
-        <Typography variant="body2" color="textSecondary">
-          {row.slug}
-        </Typography>
+        <Box>
+          <Typography variant="body2">
+            {row.createdAt
+              ? new Date(row.createdAt).toLocaleDateString()
+              : "N/A"}
+          </Typography>
+          {row.updatedAt && (
+            <Typography variant="caption" color="text.secondary">
+              Updated: {new Date(row.updatedAt).toLocaleDateString()}
+            </Typography>
+          )}
+        </Box>
       ),
-    },
-    {
-      field: "difficulty",
-      headerName: "Difficulty",
-      width: 120,
-      render: (row) => {
-        const colorMap = {
-          easy: "success",
-          medium: "warning",
-          tough: "error",
-        };
-        return (
-          <Chip
-            label={row.difficulty}
-            color={colorMap[row.difficulty] || "default"}
-            size="small"
-          />
-        );
-      },
     },
     {
       field: "actions",
@@ -283,18 +268,6 @@ export default function TopicsPage() {
       gridProps: { size: { xs: 12, sm: 12, md: 12 } },
       multiline: true,
       rows: 3,
-    },
-    {
-      name: "difficulty",
-      label: "Difficulty",
-      type: "select",
-      required: true,
-      options: [
-        { value: "easy", label: "Easy" },
-        { value: "medium", label: "Medium" },
-        { value: "tough", label: "Tough" },
-      ],
-      gridProps: { size: { xs: 12, sm: 12, md: 12 } },
     },
   ];
 

@@ -86,11 +86,20 @@ export default function SubtopicsPage() {
             loading: false,
             error: error.response?.data?.message || "Failed to fetch subtopics",
           }));
-          toast.error(error.response?.data?.message || "Failed to fetch subtopics");
+          toast.error(
+            error.response?.data?.message || "Failed to fetch subtopics"
+          );
         }
       }
     },
-    [state.page, state.rowsPerPage, state.searchTerm, state.selectedTopic, state.difficulty, state.status]
+    [
+      state.page,
+      state.rowsPerPage,
+      state.searchTerm,
+      state.selectedTopic,
+      state.difficulty,
+      state.status,
+    ]
   );
 
   useEffect(() => {
@@ -197,14 +206,18 @@ export default function SubtopicsPage() {
     } catch (error) {
       if (error !== "cancelled") {
         console.error("Error in confirmation:", error);
-        toast.error(error.response?.data?.message || "Failed to delete subtopic");
+        toast.error(
+          error.response?.data?.message || "Failed to delete subtopic"
+        );
       }
     }
   };
 
   const handleSubmitSubtopic = async (data) => {
     const isUpdate = Boolean(subtopicToUpdate);
-    const endpoint = isUpdate ? `/subtopics/${subtopicToUpdate._id}` : "/subtopics";
+    const endpoint = isUpdate
+      ? `/subtopics/${subtopicToUpdate._id}`
+      : "/subtopics";
     const method = isUpdate ? "put" : "post";
 
     try {
@@ -225,12 +238,15 @@ export default function SubtopicsPage() {
 
       toast.success(
         response.message ||
-          `Subtopic ${isUpdate ? 'updated' : 'created'} successfully`
+          `Subtopic ${isUpdate ? "updated" : "created"} successfully`
       );
       fetchSubtopics();
       handleCloseForm();
     } catch (error) {
-      console.error(`Error ${isUpdate ? "updating" : "saving"} subtopic:`, error);
+      console.error(
+        `Error ${isUpdate ? "updating" : "saving"} subtopic:`,
+        error
+      );
       toast.error(
         error.response?.data?.message || error.message || "An error occurred"
       );
@@ -267,42 +283,24 @@ export default function SubtopicsPage() {
       headerName: "Difficulty",
       width: 120,
       render: (row) => {
-        const difficulty = row.difficulty?.toLowerCase() || '';
+        const difficulty = row.difficulty?.toLowerCase() || "";
         const colorMap = {
-          easy: 'success',
-          medium: 'warning',
-          tough: 'error',
+          easy: "success",
+          medium: "warning",
+          tough: "error",
         };
-        
+
         return (
           <Chip
-            label={difficulty || 'Not set'}
-            color={colorMap[difficulty] || 'default'}
+            label={difficulty || "Not set"}
+            color={colorMap[difficulty] || "default"}
             size="small"
             variant="outlined"
           />
         );
       },
     },
-    {
-      field: "createdAt",
-      headerName: "Created",
-      width: 150,
-      render: (row) => (
-        <Box>
-          <Typography variant="body2">
-            {row.createdAt
-              ? new Date(row.createdAt).toLocaleDateString()
-              : "N/A"}
-          </Typography>
-          {row.updatedAt && (
-            <Typography variant="caption" color="text.secondary">
-              Updated: {new Date(row.updatedAt).toLocaleDateString()}
-            </Typography>
-          )}
-        </Box>
-      ),
-    },
+
     {
       field: "status",
       headerName: "Status",
@@ -310,7 +308,7 @@ export default function SubtopicsPage() {
       headerAlign: "center",
       align: "center",
       render: (row) => {
-        const status = row.status?.toLowerCase() || 'pending';
+        const status = row.status?.toLowerCase() || "pending";
         const statusConfig = {
           completed: { bg: "#4caf50", hover: "#388e3c" },
           pending: { bg: "#ff9800", hover: "#f57c00" },
@@ -336,12 +334,33 @@ export default function SubtopicsPage() {
       },
     },
     {
+      field: "createdAt",
+      headerName: "Created",
+      width: 150,
+      render: (row) => (
+        <Box>
+          <Typography variant="body2">
+            {row.createdAt
+              ? new Date(row.createdAt).toLocaleDateString()
+              : "N/A"}
+          </Typography>
+          {row.updatedAt && (
+            <Typography variant="caption" color="text.secondary">
+              Updated: {new Date(row.updatedAt).toLocaleDateString()}
+            </Typography>
+          )}
+        </Box>
+      ),
+    },
+    {
       field: "actions",
       headerName: "Actions",
       width: 120,
       align: "right",
       render: (row) => (
-        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, pr: 1 }}>
+        <Box
+          sx={{ display: "flex", justifyContent: "flex-end", gap: 1, pr: 1 }}
+        >
           <Tooltip title="Edit subtopic">
             <IconButton
               size="small"
@@ -531,7 +550,7 @@ export default function SubtopicsPage() {
         >
           <Box>
             <Typography variant="h5" fontWeight="bold">
-              {subtopicToUpdate ? 'Edit' : 'Add New'} Subtopic
+              {subtopicToUpdate ? "Edit" : "Add New"} Subtopic
             </Typography>
             <Typography
               variant="caption"
@@ -578,13 +597,22 @@ export default function SubtopicsPage() {
                 gridProps: { size: { xs: 12, sm: 12, md: 6 } },
               },
               {
+                name: "description",
+                label: "Description",
+                type: "textarea",
+                fullWidth: true,
+                gridProps: { size: { xs: 12, sm: 12, md: 12 } },
+                multiline: true,
+                rows: 3,
+              },
+              {
                 name: "difficulty",
                 label: "Difficulty",
                 type: "select",
                 options: [
-                  { value: 'easy', label: 'Easy' },
-                  { value: 'medium', label: 'Medium' },
-                  { value: 'tough', label: 'Tough' },
+                  { value: "easy", label: "Easy" },
+                  { value: "medium", label: "Medium" },
+                  { value: "tough", label: "Tough" },
                 ],
                 required: true,
                 gridProps: { size: { xs: 12, sm: 6, md: 4 } },
@@ -594,8 +622,8 @@ export default function SubtopicsPage() {
                 label: "Status",
                 type: "select",
                 options: [
-                  { value: 'pending', label: 'Pending' },
-                  { value: 'completed', label: 'Completed' },
+                  { value: "pending", label: "Pending" },
+                  { value: "completed", label: "Completed" },
                 ],
                 required: true,
                 gridProps: { size: { xs: 12, sm: 6, md: 4 } },
@@ -630,6 +658,7 @@ export default function SubtopicsPage() {
             initialValues={
               subtopicToUpdate || {
                 name: "",
+                description: "",
                 topicId: "",
                 difficulty: "easy",
                 status: "pending",
@@ -649,6 +678,12 @@ export default function SubtopicsPage() {
                   message: "Subtopic name is required",
                 },
               ],
+              description: [
+                {
+                  test: (value) => value && value.trim().length > 0,
+                  message: "Description name is required",
+                },
+              ],
               topicId: [
                 {
                   test: (value) => !!value,
@@ -657,14 +692,8 @@ export default function SubtopicsPage() {
               ],
               difficulty: [
                 {
-                  test: (value) => ['easy', 'medium', 'tough'].includes(value),
+                  test: (value) => ["easy", "medium", "tough"].includes(value),
                   message: "Please select a valid difficulty",
-                },
-              ],
-              status: [
-                {
-                  test: (value) => ['pending', 'completed'].includes(value),
-                  message: "Please select a valid status",
                 },
               ],
               order: [

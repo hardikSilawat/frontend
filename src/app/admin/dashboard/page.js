@@ -8,15 +8,23 @@ import {
   CardContent,
   LinearProgress,
   useTheme,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { selectAdmin } from "@/redux/reducers";
 import AdminMainLayout from "@/components/AdminMainLayout/page";
 import {
   People,
-  ShoppingCart,
-  Inventory,
+  CheckCircle,
   TrendingUp,
+  Timeline,
+  Star,
+  Topic as TopicIcon,
+  MenuBook,
 } from "@mui/icons-material";
 import api from "@/apiHandler/page";
 
@@ -25,24 +33,18 @@ export default function AdminDashboard() {
   const admin = useSelector(selectAdmin);
   const [isLoading, setIsLoading] = useState(true);
   const [stats, setStats] = useState({
-    users: 0,
-    products: 0,
-    orders: 0,
-    revenue: "₹0",
-    growth: 0,
+    users: { total: 0, activeToday: 0, newThisWeek: 0 },
+    topics: { total: 0, subtopics: 0, completionRate: 0 },
+    progress: { totalCompleted: 0, averagePerUser: 0, maxCompleted: 0 },
+    topTopics: [],
+    recentActivity: [],
   });
 
   const fetchDashboardStats = async () => {
     try {
-      const response = await api.get("/user/dashboard-stats");
-      if (response.success) {
-        setStats({
-          users: response.data.users,
-          products: response.data.products,
-          orders: response.data.orders,
-          revenue: `₹${response.data.revenue?.toLocaleString("en-IN")}`,
-          growth: response.data.growth,
-        });
+      const response = await api.get("/auth/admin/dashboard-stats");
+      if (response.data) {
+        setStats(response.data);
       }
     } catch (error) {
       console.error("Error fetching dashboard stats:", error);
@@ -55,104 +57,80 @@ export default function AdminDashboard() {
     fetchDashboardStats();
   }, []);
 
-  useEffect(() => {
-    // Simulate data loading
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const StatCard = ({ title, value, icon: Icon, color }) => (
+  const StatCard = ({ title, value, icon: Icon, color, subtext }) => (
     <Card
       sx={{
-        background: `linear-gradient(145deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`,
-        borderRadius: 3,
-        boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
-        transition: "transform 0.3s ease, box-shadow 0.3s ease",
-        "&:hover": {
-          transform: "translateY(-5px)",
-          boxShadow: "0 12px 20px rgba(0,0,0,0.15)",
-        },
+        background: theme.palette.background.paper,
+        borderRadius: 2,
+        boxShadow: theme.shadows[1],
         height: "100%",
-        position: "relative",
-        overflow: "hidden",
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 4,
-          background: color,
+        transition: "transform 0.2s",
+        "&:hover": {
+          transform: "translateY(-4px)",
+          boxShadow: theme.shadows[3],
         },
       }}
     >
-      <CardContent sx={{ p: 3 }}>
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={2}
-        >
-          <Typography
-            variant="subtitle2"
-            color="text.secondary"
-            sx={{ textTransform: "uppercase", letterSpacing: 1 }}
-          >
-            {title}
-          </Typography>
+      <CardContent>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box>
+            <Typography
+              variant="subtitle2"
+              color="text.secondary"
+              sx={{ textTransform: "uppercase", fontSize: 12, fontWeight: 600 }}
+            >
+              {title}
+            </Typography>
+            <Typography variant="h5" sx={{ mt: 1, fontWeight: 600 }}>
+              {value}
+            </Typography>
+            {subtext && (
+              <Typography variant="caption" color="text.secondary">
+                {subtext}
+              </Typography>
+            )}
+          </Box>
           <Box
             sx={{
               width: 48,
               height: 48,
               borderRadius: "12px",
-              background: `${color}15`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              bgcolor: `${color}20`,
               color: color,
             }}
           >
-            <Icon fontSize="medium" />
+            <Icon />
           </Box>
         </Box>
-        {isLoading ? (
-          <LinearProgress />
-        ) : (
-          <>
-            <Typography
-              variant="h4"
-              component="div"
-              sx={{ fontWeight: 600, mb: 1 }}
-            >
-              {value}
-            </Typography>
-            {title === "Total Revenue" && (
-              <Box display="flex" alignItems="center" mt={1}>
-                <TrendingUp
-                  sx={{ color: "#4caf50", mr: 0.5, fontSize: "1rem" }}
-                />
-                <Typography
-                  variant="body2"
-                  color="success.main"
-                  sx={{ fontWeight: 500 }}
-                >
-                  +{stats.growth}% from last month
-                </Typography>
-              </Box>
-            )}
-          </>
-        )}
       </CardContent>
     </Card>
   );
 
-  if (!admin) {
+  const ActivityItem = ({ date, count }) => (
+    <ListItem>
+      <ListItemText
+        primary={`${count} ${count === 1 ? "completion" : "completions"}`}
+        secondary={new Date(date).toLocaleDateString("en-US", {
+          weekday: "short",
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })}
+      />
+      <Typography variant="body2" color="primary">
+        {count} {count === 1 ? "problem" : "problems"}
+      </Typography>
+    </ListItem>
+  );
+
+  if (isLoading) {
     return (
       <AdminMainLayout>
-        <Box p={3}>
-          <Typography variant="h6">Loading admin data...</Typography>
+        <Box p={3} textAlign="center">
+          <LinearProgress />
         </Box>
       </AdminMainLayout>
     );
@@ -160,81 +138,169 @@ export default function AdminDashboard() {
 
   return (
     <AdminMainLayout>
-      <Box sx={{ p: { xs: 2, md: 3 } }}>
+      <Box sx={{ p: { xs: 2, md: 3 }, overflow: "hiddedn" }}>
+        {/* Welcome Banner */}
         <Paper
           elevation={0}
           sx={{
             p: { xs: 2, md: 4 },
             mb: 4,
-            borderRadius: 3,
-            background: `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`,
+            borderRadius: 2,
+            background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
             color: "white",
-            position: "relative",
-            overflow: "hidden",
-            "&::before": {
-              content: '""',
-              position: "absolute",
-              right: -50,
-              top: -50,
-              width: 200,
-              height: 200,
-              borderRadius: "50%",
-              background: "rgba(255,255,255,0.1)",
-            },
           }}
         >
-          <Box position="relative" zIndex={1}>
-            <Typography
-              variant="h4"
-              component="h1"
-              sx={{ fontWeight: 700, mb: 1 }}
-            >
-              Welcome back, {admin.name || "Admin"}! 👋
-            </Typography>
-            <Typography
-              variant="subtitle1"
-              sx={{ opacity: 0.9, maxWidth: "600px" }}
-            >
-              Here&apos;s what&apos;s happening with your store today.
-            </Typography>
-          </Box>
+          <Typography
+            variant="h5"
+            component="h1"
+            sx={{ fontWeight: 600, mb: 1 }}
+          >
+            Welcome back, {admin?.name || "Admin"}! 👋
+          </Typography>
+          <Typography variant="body1" sx={{ opacity: 0.9 }}>
+            Here's what's happening with your DSA platform today.
+          </Typography>
         </Paper>
 
-        <Box
-          display="grid"
-          gridTemplateColumns={{
-            xs: "1fr",
-            sm: "repeat(2, 1fr)",
-            lg: "repeat(4, 1fr)",
-          }}
-          gap={3}
-          mb={4}
-        >
-          <StatCard
-            title="Total Users"
-            value={stats.users.toLocaleString()}
-            icon={People}
-            color={theme.palette.primary.main}
-          />
-          <StatCard
-            title="Total Products"
-            value={stats.products}
-            icon={Inventory}
-            color={theme.palette.secondary.main}
-          />
-          <StatCard
-            title="Total Orders"
-            value={stats.orders}
-            icon={ShoppingCart}
-            color={theme.palette.info.main}
-          />
-          <StatCard
-            title="Total Revenue"
-            value={stats.revenue}
-            icon={TrendingUp}
-            color="#4caf50"
-          />
-        </Box>
+        {/* Stats Grid */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <StatCard
+              title="Total Users"
+              value={stats.users.total}
+              icon={People}
+              color={theme.palette.primary.main}
+              subtext={`${stats.users.newThisWeek} new this week`}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <StatCard
+              title="Topics"
+              value={stats.topics.total}
+              icon={TopicIcon}
+              color={theme.palette.success.main}
+              subtext={`${stats.topics.subtopics} subtopics`}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <StatCard
+              title="Completions"
+              value={stats.progress.totalCompleted}
+              icon={CheckCircle}
+              color={theme.palette.warning.main}
+              subtext={`${stats.progress.averagePerUser} avg per user`}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <StatCard
+              title="Completion Rate"
+              value={`${Math.round(stats.topics.completionRate)}%`}
+              icon={TrendingUp}
+              color={theme.palette.info.main}
+              subtext={`Max: ${stats.progress.maxCompleted} by single user`}
+            />
+          </Grid>
+        </Grid>
+
+        {/* Main Content */}
+        <Grid container spacing={3}>
+          {/* Top Topics */}
+          <Grid size={{ xs: 12, md: 6 }}>
+            {" "}
+            <Card>
+              <CardContent>
+                <Box display="flex" alignItems="center" mb={2}>
+                  <Star color="primary" sx={{ mr: 1 }} />
+                  <Typography variant="h6" component="h2">
+                    Top Topics
+                  </Typography>
+                </Box>
+                <List>
+                  {stats.topTopics.map((topic, index) => (
+                    <Box key={topic._id}>
+                      <ListItem>
+                        <ListItemText
+                          primary={topic.topicName}
+                          secondary={`${topic.completedCount} completions`}
+                        />
+                        <Box
+                          sx={{
+                            width: 100,
+                            height: 8,
+                            bgcolor: "divider",
+                            borderRadius: 4,
+                            overflow: "hidden",
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              width: `${
+                                (topic.completedCount /
+                                  (stats.progress.totalCompleted || 1)) *
+                                100
+                              }%`,
+                              height: "100%",
+                              bgcolor: "primary.main",
+                            }}
+                          />
+                        </Box>
+                      </ListItem>
+                      {index < stats.topTopics.length - 1 && (
+                        <Divider variant="middle" component="li" />
+                      )}
+                    </Box>
+                  ))}
+                  {stats.topTopics.length === 0 && (
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ p: 2, textAlign: "center" }}
+                    >
+                      No completion data available yet
+                    </Typography>
+                  )}
+                </List>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* Recent Activity */}
+          <Grid size={{ xs: 12, md: 6 }}>
+            {" "}
+            <Card>
+              <CardContent>
+                <Box display="flex" alignItems="center" mb={2}>
+                  <Timeline color="primary" sx={{ mr: 1 }} />
+                  <Typography variant="h6" component="h2">
+                    Recent Activity
+                  </Typography>
+                </Box>
+                <List>
+                  {stats.recentActivity.map((activity, index) => (
+                    <Box key={activity._id}>
+                      <ActivityItem
+                        date={activity._id}
+                        count={activity.count}
+                      />
+                      {index < stats.recentActivity.length - 1 && (
+                        <Divider variant="middle" component="li" />
+                      )}
+                    </Box>
+                  ))}
+                  {stats.recentActivity.length === 0 && (
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ p: 2, textAlign: "center" }}
+                    >
+                      No recent activity
+                    </Typography>
+                  )}
+                </List>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       </Box>
     </AdminMainLayout>
   );
