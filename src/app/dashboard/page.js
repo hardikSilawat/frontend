@@ -106,7 +106,8 @@ function ResponsiveDrawer({ window }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [topics, setTopics] = useState([]);
-  const user = useSelector(selectUser);
+  const user = useSelector((state) => state.user);
+  console.log(user)
   const dispatch = useDispatch();
   const router = useRouter();
   const [selectedSubtopic, setSelectedSubtopic] = useState(null);
