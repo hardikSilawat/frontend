@@ -27,6 +27,14 @@ import api from "@/apiHandler/page";
 import dynamic from "next/dynamic";
 import { useRef } from "react";
 import { toast } from "react-toastify";
+import { DrawerHeader } from "@/components/AdminMainLayout/page";
+import { alpha, Avatar, Menu, MenuItem } from "@mui/material";
+import { selectUser, setUser } from "@/redux/reducers";
+import { useDispatch, useSelector } from "react-redux";
+import { Logout } from "@mui/icons-material";
+import theme from "../theme";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 // ProgressChip component for displaying progress with percentage
 const ProgressChip = ({ level, completed, total, percentage }) => {
@@ -98,6 +106,9 @@ function ResponsiveDrawer({ window }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [topics, setTopics] = useState([]);
+  const user = useSelector(selectUser);
+  const dispatch = useDispatch();
+  const router = useRouter();
   const [selectedSubtopic, setSelectedSubtopic] = useState(null);
   const [expandedTopics, setExpandedTopics] = useState({});
   const [loading, setLoading] = useState(true);
@@ -108,6 +119,7 @@ function ResponsiveDrawer({ window }) {
     tough: { completed: 0, total: 0, percentage: 0 },
     overall: { completed: 0, total: 0, percentage: 0 },
   });
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -215,40 +227,23 @@ function ResponsiveDrawer({ window }) {
 
   const drawer = (
     <Box>
-      <Stack display={{ xs: "block", md: "none" }}>
-        <ProgressChip
-          level="Easy"
-          completed={progress.easy.completed}
-          total={progress.easy.total}
-          percentage={progress.easy.percentage}
-        />
-        <ProgressChip
-          level="Medium"
-          completed={progress.medium.completed}
-          total={progress.medium.total}
-          percentage={progress.medium.percentage}
-        />
-        <ProgressChip
-          level="Tough"
-          completed={progress.tough.completed}
-          total={progress.tough.total}
-          percentage={progress.tough.percentage}
-        />
-        <ProgressChip
-          level="Overall"
-          completed={progress.overall.completed}
-          total={progress.overall.total}
-          percentage={progress.overall.percentage}
+      <DrawerHeader>
+        <Box
           sx={{
-            borderWidth: 2,
-            borderColor: "primary.main",
-            backgroundColor: "rgba(25, 118, 210, 0.08)",
-            "&:hover": {
-              backgroundColor: "rgba(25, 118, 210, 0.12)",
-            },
+            my: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "70%",
+            height: "100%",
+            textDecoration: "none",
           }}
-        />
-      </Stack>
+        >
+          <Typography variant="h6" sx={{ color: "primary.contrastText" }}>
+            DSA Tracker
+          </Typography>
+        </Box>
+      </DrawerHeader>
 
       <Divider />
       <List>
@@ -358,12 +353,71 @@ function ResponsiveDrawer({ window }) {
           })
         )}
       </List>
+
+      <Divider sx={{ mb: 2 }} />
+      <Stack sx={{ gap: 2, p: 2 }}>
+        <ProgressChip
+          level="Easy"
+          completed={progress.easy.completed}
+          total={progress.easy.total}
+          percentage={progress.easy.percentage}
+        />
+        <ProgressChip
+          level="Medium"
+          completed={progress.medium.completed}
+          total={progress.medium.total}
+          percentage={progress.medium.percentage}
+        />
+        <ProgressChip
+          level="Tough"
+          completed={progress.tough.completed}
+          total={progress.tough.total}
+          percentage={progress.tough.percentage}
+        />
+        <ProgressChip
+          level="Overall"
+          completed={progress.overall.completed}
+          total={progress.overall.total}
+          percentage={progress.overall.percentage}
+          sx={{
+            borderWidth: 2,
+            borderColor: "primary.main",
+            backgroundColor: "rgba(25, 118, 210, 0.08)",
+            "&:hover": {
+              backgroundColor: "rgba(25, 118, 210, 0.12)",
+            },
+          }}
+        />
+      </Stack>
     </Box>
   );
 
   // Remove this const when copying and pasting into your project.
   const container =
     window !== undefined ? () => window().document.body : undefined;
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await api.post(`/auth/logout`);
+      const { success, message } = response;
+      if (success) {
+        toast.success(message || "Successfully logged out");
+        Cookies.remove("UserToken", { path: "/" });
+        dispatch(setUser(null));
+        router.push("/login");
+      } else {
+        toast.error(message || "Failed to logout");
+      }
+    } catch (err) {
+      const errorMessage =
+        err?.response?.message || err.message || "Error during logout";
+      toast.error(errorMessage);
+    }
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -385,14 +439,7 @@ function ResponsiveDrawer({ window }) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, color: "white" }}
-          >
-            DSA Tracker
-          </Typography>
+
           <Stack
             direction="row"
             spacing={1}
@@ -433,6 +480,119 @@ function ResponsiveDrawer({ window }) {
               percentage={progress.overall.percentage}
             />
           </Stack>
+
+          <Box sx={{ display: "flex", alignItems: "center", ml: "auto" }}>
+            {/* Inside the AppBar's Toolbar, after the Stack component */}
+            <Tooltip title="Account settings">
+              <IconButton
+                onClick={handleMenuOpen}
+                size="small"
+                sx={{
+                  ml: 1,
+                  p: 0.5,
+                  border: `2px solid ${theme.palette.divider}`,
+                  transition: "all 0.2s",
+                  backgroundColor: theme.palette.primary.contrastText,
+                  "&:hover": {
+                    borderColor: theme.palette.primary.dark,
+                    transform: "translateY(-2px)",
+                    boxShadow: `0 4px 12px ${alpha(
+                      theme.palette.primary.dark,
+                      0.15
+                    )}`,
+                  },
+                }}
+                aria-controls={Boolean(anchorEl) ? "account-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={Boolean(anchorEl) ? "true" : undefined}
+              >
+                <Avatar
+                  src={user?.avatar}
+                  alt={user?.name?.charAt(0) || "U"}
+                  sx={{
+                    width: 36,
+                    height: 36,
+                    bgcolor: user?.avatar ? "transparent" : "primary.dark",
+                    color: user?.avatar ? "inherit" : "primary.contrastText",
+                    fontWeight: 600,
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                      borderColor: theme.palette.primary.dark,
+                    },
+                    transition: "transform 0.2s",
+                  }}
+                >
+                  {user?.name?.charAt(0) || "U"}
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+
+            {/* Menu component */}
+            <Menu
+              anchorEl={anchorEl}
+              id="account-menu"
+              open={Boolean(anchorEl)}
+              onClose={() => setAnchorEl(null)}
+              onClick={() => setAnchorEl(null)}
+              PaperProps={{
+                elevation: 3,
+                sx: {
+                  overflow: "visible",
+                  mt: 1.5,
+                  minWidth: 200,
+                  borderRadius: 2,
+                  "& .MuiAvatar-root": {
+                    width: 32,
+                    height: 32,
+                    ml: -0.5,
+                    mr: 1,
+                  },
+                  "&:before": {
+                    content: '""',
+                    display: "block",
+                    position: "absolute",
+                    top: 0,
+                    right: 14,
+                    width: 10,
+                    height: 10,
+                    bgcolor: "background.paper",
+                    transform: "translateY(-50%) rotate(45deg)",
+                    zIndex: 0,
+                  },
+                },
+              }}
+              transformOrigin={{ horizontal: "right", vertical: "top" }}
+              anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+            >
+              <MenuItem onClick={() => setAnchorEl(null)}>
+                <Avatar
+                  src={user?.avatar}
+                  alt={user?.name?.charAt(0) || "U"}
+                  sx={{
+                    bgcolor: user?.avatar ? "transparent" : "primary.main",
+                    color: user?.avatar ? "inherit" : "white",
+                  }}
+                >
+                  {user?.name?.charAt(0) || "U"}
+                </Avatar>
+                <Box>
+                  <Typography variant="subtitle2" fontWeight={500} noWrap>
+                    {user?.name || "User"}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary" noWrap>
+                    {user?.email || "user@example.com"}
+                  </Typography>
+                </Box>
+              </MenuItem>
+              <Divider />
+              <MenuItem onClick={handleLogout}>
+                <ListItemIcon>
+                  <Logout fontSize="small" color="error" />
+                </ListItemIcon>
+                <Typography color="error">Logout</Typography>
+              </MenuItem>
+            </Menu>
+          </Box>
         </Toolbar>
       </AppBar>
       <Box
@@ -449,6 +609,7 @@ function ResponsiveDrawer({ window }) {
           onClose={handleDrawerClose}
           sx={{
             display: { xs: "block", sm: "none" },
+
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,

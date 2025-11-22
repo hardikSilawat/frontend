@@ -90,7 +90,7 @@ const menuItems = [
   },
 ];
 
-const DrawerHeader = styled("div")(({ theme }) => ({
+export const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
   background: `linear-gradient(45deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
@@ -141,13 +141,13 @@ export default function AdminMainLayout({ children, window }) {
     }
   };
 
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+    const handleMenuOpen = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
+    const handleMenuClose = () => {
+      setAnchorEl(null);
+    };
 
   const handleLogout = async () => {
     try {
@@ -705,7 +705,6 @@ export default function AdminMainLayout({ children, window }) {
                 </Box>
               </MenuItem>
               <Divider />
-
               <MenuItem onClick={handleLogout}>
                 <ListItemIcon>
                   <LogoutIcon fontSize="small" color="error" />
