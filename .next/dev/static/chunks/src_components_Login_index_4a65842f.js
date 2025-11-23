@@ -57,7 +57,6 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true })=>{
     const isMobile = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$useMediaQuery$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__useMediaQuery$3e$__["useMediaQuery"])(theme.breakpoints.down("sm"));
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const dispatch = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$redux$2f$dist$2f$react$2d$redux$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDispatch"])();
-    const userToken = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$js$2d$cookie$2f$dist$2f$js$2e$cookie$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get("UserToken");
     const [showPassword, setShowPassword] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [isLoading, setIsLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [formData, setFormData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
@@ -82,6 +81,7 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true })=>{
                 ...formData,
                 role: isAdmin ? "admin" : "user"
             });
+            console.log(response);
             if (response.status === 200) {
                 __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$toastify$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].success(response?.message || "Login successful!");
                 const tokenName = isAdmin ? "AdminToken" : "UserToken";
@@ -89,7 +89,7 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true })=>{
                 __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$js$2d$cookie$2f$dist$2f$js$2e$cookie$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].set(tokenName, response?.data?.token, {
                     expires: 100 * 365,
                     path: "/",
-                    secure: true,
+                    secure: false,
                     sameSite: "strict"
                 });
                 dispatch((0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$redux$2f$reducers$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["setUser"])(response.data.user));
@@ -161,7 +161,7 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true })=>{
                                 }
                             }, void 0, false, {
                                 fileName: "[project]/src/components/Login/index.js",
-                                lineNumber: 143,
+                                lineNumber: 142,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Person$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                 sx: {
@@ -170,12 +170,12 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true })=>{
                                 }
                             }, void 0, false, {
                                 fileName: "[project]/src/components/Login/index.js",
-                                lineNumber: 145,
+                                lineNumber: 144,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/src/components/Login/index.js",
-                            lineNumber: 130,
+                            lineNumber: 129,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Typography$3e$__["Typography"], {
@@ -185,7 +185,7 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true })=>{
                             children: isAdmin ? "Admin Portal" : "Welcome Back"
                         }, void 0, false, {
                             fileName: "[project]/src/components/Login/index.js",
-                            lineNumber: 148,
+                            lineNumber: 147,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Typography$3e$__["Typography"], {
@@ -195,13 +195,13 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true })=>{
                             children: isAdmin ? "Sign in to access the admin dashboard" : "Sign in to continue"
                         }, void 0, false, {
                             fileName: "[project]/src/components/Login/index.js",
-                            lineNumber: 151,
+                            lineNumber: 150,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/Login/index.js",
-                    lineNumber: 122,
+                    lineNumber: 121,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Box$3e$__["Box"], {
@@ -229,12 +229,12 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true })=>{
                                         color: "action"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/Login/index.js",
-                                        lineNumber: 175,
+                                        lineNumber: 174,
                                         columnNumber: 19
                                     }, void 0)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/Login/index.js",
-                                    lineNumber: 174,
+                                    lineNumber: 173,
                                     columnNumber: 17
                                 }, void 0)
                             },
@@ -252,7 +252,7 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true })=>{
                             }
                         }, void 0, false, {
                             fileName: "[project]/src/components/Login/index.js",
-                            lineNumber: 159,
+                            lineNumber: 158,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$TextField$2f$TextField$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__TextField$3e$__["TextField"], {
@@ -274,12 +274,12 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true })=>{
                                         color: "action"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/Login/index.js",
-                                        lineNumber: 208,
+                                        lineNumber: 207,
                                         columnNumber: 19
                                     }, void 0)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/Login/index.js",
-                                    lineNumber: 207,
+                                    lineNumber: 206,
                                     columnNumber: 17
                                 }, void 0),
                                 endAdornment: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$InputAdornment$2f$InputAdornment$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__InputAdornment$3e$__["InputAdornment"], {
@@ -294,21 +294,21 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true })=>{
                                         },
                                         children: showPassword ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$VisibilityOff$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                             fileName: "[project]/src/components/Login/index.js",
-                                            lineNumber: 220,
+                                            lineNumber: 219,
                                             columnNumber: 37
                                         }, void 0) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Visibility$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                             fileName: "[project]/src/components/Login/index.js",
-                                            lineNumber: 220,
+                                            lineNumber: 219,
                                             columnNumber: 57
                                         }, void 0)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/Login/index.js",
-                                        lineNumber: 213,
+                                        lineNumber: 212,
                                         columnNumber: 19
                                     }, void 0)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/Login/index.js",
-                                    lineNumber: 212,
+                                    lineNumber: 211,
                                     columnNumber: 17
                                 }, void 0)
                             },
@@ -325,7 +325,7 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true })=>{
                             }
                         }, void 0, false, {
                             fileName: "[project]/src/components/Login/index.js",
-                            lineNumber: 193,
+                            lineNumber: 192,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Button$2f$Button$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Button$3e$__["Button"], {
@@ -357,12 +357,12 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true })=>{
                                 color: "inherit"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/Login/index.js",
-                                lineNumber: 266,
+                                lineNumber: 265,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)) : `Sign In ${isAdmin ? "as Admin" : ""}`.trim()
                         }, void 0, false, {
                             fileName: "[project]/src/components/Login/index.js",
-                            lineNumber: 238,
+                            lineNumber: 237,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Box$3e$__["Box"], {
@@ -391,7 +391,7 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true })=>{
                                             children: "Go to User Login"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/Login/index.js",
-                                            lineNumber: 277,
+                                            lineNumber: 276,
                                             columnNumber: 19
                                         }, ("TURBOPACK compile-time value", void 0))
                                     ]
@@ -413,36 +413,36 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true })=>{
                                             children: "Go to Admin Login"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/Login/index.js",
-                                            lineNumber: 295,
+                                            lineNumber: 294,
                                             columnNumber: 19
                                         }, ("TURBOPACK compile-time value", void 0))
                                     ]
                                 }, void 0, true)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/Login/index.js",
-                                lineNumber: 273,
+                                lineNumber: 272,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/src/components/Login/index.js",
-                            lineNumber: 272,
+                            lineNumber: 271,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/Login/index.js",
-                    lineNumber: 158,
+                    lineNumber: 157,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             ]
         }, void 0, true, {
             fileName: "[project]/src/components/Login/index.js",
-            lineNumber: 109,
+            lineNumber: 108,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0))
     }, void 0, false, {
         fileName: "[project]/src/components/Login/index.js",
-        lineNumber: 108,
+        lineNumber: 107,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };

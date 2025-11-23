@@ -37,7 +37,6 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const router = useRouter();
   const dispatch = useDispatch();
-  const userToken = Cookies.get("UserToken");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -66,7 +65,7 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true }) => {
         ...formData,
         role: isAdmin ? "admin" : "user",
       });
-
+      console.log(response)
       if (response.status === 200) {
         toast.success(response?.message || "Login successful!");
         const tokenName = isAdmin ? "AdminToken" : "UserToken";
@@ -75,7 +74,7 @@ const LoginForm = ({ isAdmin = false, onSuccess, authModal = true }) => {
         Cookies.set(tokenName, response?.data?.token, {
           expires: 100 * 365,
           path: "/",
-          secure: true,
+          secure: false,
           sameSite: "strict",
         });
 

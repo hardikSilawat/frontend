@@ -93,7 +93,7 @@ function AuthAndProviders({ children }) {
         Cookies.set(tokenName, token, {
           expires: 100 * 365,
           path: "/",
-          secure: process.env.NODE_ENV === "production",
+          secure: false,
           sameSite: "strict",
         });
         // Set Redux state
