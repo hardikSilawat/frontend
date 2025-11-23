@@ -1,0 +1,13 @@
+{
+  "[project]/src/app/(auth)/login/page.js [app-client] (ecmascript, next/dynamic entry)": {
+    "id": "[project]/src/app/(auth)/login/page.js [app-client] (ecmascript, next/dynamic entry)",
+    "files": [
+      "static/chunks/src_components_Login_index_df9551ed.js",
+      "static/chunks/_7dd88e76._.js",
+      "static/chunks/src_app_(auth)_login_page_1e29f8fa.js",
+      "static/chunks/node_modules_dc8d3e28._.js",
+      "static/chunks/src_components_Login_index_4a65842f.js",
+      "static/chunks/src_components_Login_index_9c67cbf2.js"
+    ]
+  }
+}

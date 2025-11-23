@@ -3,11 +3,11 @@ import Cookies from "js-cookie";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-// Auth routes that should redirect to home if already authenticated
-const authRoutes = ["/login"];
+// Routes that don't require authentication
+const publicRoutes = ["/login", "/admin/login"];
 
-// Protected routes that require authentication
-const protectedRoutes = ["/dashboard"];
+// Admin routes
+const adminRoutes = ["/admin"];
 
 export default function AuthRedirect({ children }) {
   const router = useRouter();
@@ -21,16 +21,15 @@ export default function AuthRedirect({ children }) {
   useEffect(() => {
     if (!isClient) return;
 
-    const token = Cookies.get("UserToken");
-    const adminToken = Cookies.get("AdminToken");
+    const token = Cookies.get("token");
+    const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+    const isAdminRoute = pathname.startsWith("/admin");
 
     // Handle admin routes
-    if (pathname.startsWith("/admin")) {
-      if (!adminToken) {
-        if (!pathname.startsWith("/admin/login")) {
-          router.replace("/admin/login");
-        }
-      } else if (pathname === "/admin/login") {
+    if (isAdminRoute) {
+      if (!pathname.startsWith("/admin/login") && !token) {
+        router.replace("/admin/login");
+      } else if (pathname === "/admin/login" && token) {
         router.replace("/admin/dashboard");
       }
       return;
@@ -38,46 +37,20 @@ export default function AuthRedirect({ children }) {
 
     // Handle root path
     if (pathname === "/") {
-      if (adminToken) {
-        router.replace("/admin/dashboard");
-      } else if (token) {
-        router.replace("/dashboard");
-      } else {
-        router.replace("/login");
-      }
+      router.replace(token ? "/dashboard" : "/login");
       return;
     }
 
-    // Check route types
-    const isProtectedRoute = protectedRoutes.some(route => 
-      pathname.startsWith(route)
-    );
-    const isAuthRoute = authRoutes.some(route => 
-      pathname.startsWith(route)
-    );
-
     // Handle protected routes
-    if (isProtectedRoute) {
-      if (adminToken) {
-        router.replace("/admin/dashboard");
-        return;
-      }
-      if (!token) {
-        router.replace("/login");
-        return;
-      }
+    if (!isPublicRoute && !token) {
+      router.replace("/login");
+      return;
     }
 
-    // Handle auth routes
-    if (isAuthRoute) {
-      if (adminToken) {
-        router.replace("/admin/dashboard");
-        return;
-      }
-      if (token) {
-        router.replace("/dashboard");
-        return;
-      }
+    // If on login page but already authenticated
+    if (pathname.startsWith("/login") && token) {
+      router.replace("/dashboard");
+      return;
     }
   }, [isClient, pathname, router]);
 
