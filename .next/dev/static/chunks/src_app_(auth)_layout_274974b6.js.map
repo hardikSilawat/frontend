@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/TUF%20GAMING/OneDrive/Desktop/Interview%20Task/frontend/src/app/%28auth%29/layout.js"],"sourcesContent":["'use client';\r\n\r\nimport { Box, Container, useTheme } from '@mui/material';\r\n\r\nexport default function AuthLayout({ children }) {\r\n  const theme = useTheme();\r\n\r\n  return (\r\n    <Container maxWidth={false} disableGutters>\r\n      <Box\r\n        sx={{\r\n          minHeight: '100vh',\r\n          display: 'flex',\r\n          flexDirection: 'column',\r\n          background: theme.palette.mode === 'light' \r\n            ? 'linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%)' \r\n            : theme.palette.background.default,\r\n        }}\r\n      >\r\n        {children}\r\n      </Box>\r\n    </Container>\r\n  );\r\n}\r\n"],"names":[],"mappings":";;;;;AAEA;AAAA;AAAA;;;AAFA;;AAIe,SAAS,WAAW,EAAE,QAAQ,EAAE;;IAC7C,MAAM,QAAQ,IAAA,oNAAQ;IAEtB,qBACE,6LAAC,0NAAS;QAAC,UAAU;QAAO,cAAc;kBACxC,cAAA,6LAAC,kMAAG;YACF,IAAI;gBACF,WAAW;gBACX,SAAS;gBACT,eAAe;gBACf,YAAY,MAAM,OAAO,CAAC,IAAI,KAAK,UAC/B,sDACA,MAAM,OAAO,CAAC,UAAU,CAAC,OAAO;YACtC;sBAEC;;;;;;;;;;;AAIT;GAnBwB;;QACR,oNAAQ;;;KADA"}}]
-}
