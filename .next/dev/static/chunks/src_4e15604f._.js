@@ -1569,8 +1569,8 @@ function ResponsiveDrawer({ window }) {
                     lineNumber: 254,
                     columnNumber: 11
                 }, this) : topics.map((topic)=>{
-                    const allSubtasksCompleted = topic.subtopics.every((st)=>st.completed);
-                    const someSubtasksCompleted = topic.subtopics.some((st)=>st.completed);
+                    const allSubtasksCompleted = topic.subtopics.every((st)=>st.isCompleted);
+                    const someSubtasksCompleted = topic.subtopics.some((st)=>st.isCompleted);
                     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ListItemButton$2f$ListItemButton$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1602,7 +1602,6 @@ function ResponsiveDrawer({ window }) {
                                         lineNumber: 267,
                                         columnNumber: 19
                                     }, this),
-                                    console.log("topic", topic),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ListItemText$2f$ListItemText$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                         primary: topic.name,
                                         primaryTypographyProps: {
@@ -1611,16 +1610,16 @@ function ResponsiveDrawer({ window }) {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/page.js",
-                                        lineNumber: 277,
+                                        lineNumber: 276,
                                         columnNumber: 19
                                     }, this),
                                     expandedTopics[topic._id] ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$ExpandLess$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/page.js",
-                                        lineNumber: 284,
+                                        lineNumber: 283,
                                         columnNumber: 48
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$ExpandMore$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/page.js",
-                                        lineNumber: 284,
+                                        lineNumber: 283,
                                         columnNumber: 65
                                     }, this)
                                 ]
@@ -1655,7 +1654,7 @@ function ResponsiveDrawer({ window }) {
                                                         fontSize: "small"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/page.js",
-                                                        lineNumber: 309,
+                                                        lineNumber: 308,
                                                         columnNumber: 29
                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         style: {
@@ -1664,12 +1663,12 @@ function ResponsiveDrawer({ window }) {
                                                         }
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/page.js",
-                                                        lineNumber: 311,
+                                                        lineNumber: 310,
                                                         columnNumber: 29
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/page.js",
-                                                    lineNumber: 307,
+                                                    lineNumber: 306,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$ListItemText$2f$ListItemText$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1695,13 +1694,13 @@ function ResponsiveDrawer({ window }) {
                                                                 }
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/dashboard/page.js",
-                                                                lineNumber: 325,
+                                                                lineNumber: 324,
                                                                 columnNumber: 33
                                                             }, void 0)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/dashboard/page.js",
-                                                        lineNumber: 316,
+                                                        lineNumber: 315,
                                                         columnNumber: 29
                                                     }, void 0),
                                                     primaryTypographyProps: {
@@ -1710,23 +1709,23 @@ function ResponsiveDrawer({ window }) {
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/page.js",
-                                                    lineNumber: 314,
+                                                    lineNumber: 313,
                                                     columnNumber: 25
                                                 }, this)
                                             ]
                                         }, subtopic._id, true, {
                                             fileName: "[project]/src/app/dashboard/page.js",
-                                            lineNumber: 293,
+                                            lineNumber: 292,
                                             columnNumber: 23
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/page.js",
-                                    lineNumber: 291,
+                                    lineNumber: 290,
                                     columnNumber: 19
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/dashboard/page.js",
-                                lineNumber: 286,
+                                lineNumber: 285,
                                 columnNumber: 17
                             }, this)
                         ]
@@ -1747,7 +1746,7 @@ function ResponsiveDrawer({ window }) {
                 }
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/page.js",
-                lineNumber: 358,
+                lineNumber: 357,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Stack$2f$Stack$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1763,7 +1762,7 @@ function ResponsiveDrawer({ window }) {
                         percentage: progress.easy.percentage
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/page.js",
-                        lineNumber: 360,
+                        lineNumber: 359,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ProgressChip, {
@@ -1773,7 +1772,7 @@ function ResponsiveDrawer({ window }) {
                         percentage: progress.medium.percentage
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/page.js",
-                        lineNumber: 366,
+                        lineNumber: 365,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ProgressChip, {
@@ -1783,7 +1782,7 @@ function ResponsiveDrawer({ window }) {
                         percentage: progress.tough.percentage
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/page.js",
-                        lineNumber: 372,
+                        lineNumber: 371,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ProgressChip, {
@@ -1801,13 +1800,13 @@ function ResponsiveDrawer({ window }) {
                         }
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/page.js",
-                        lineNumber: 378,
+                        lineNumber: 377,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/page.js",
-                lineNumber: 359,
+                lineNumber: 358,
                 columnNumber: 7
             }, this)
         ]
@@ -1847,7 +1846,7 @@ function ResponsiveDrawer({ window }) {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$CssBaseline$2f$CssBaseline$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/src/app/dashboard/page.js",
-                lineNumber: 425,
+                lineNumber: 424,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$AppBar$2f$AppBar$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1875,12 +1874,12 @@ function ResponsiveDrawer({ window }) {
                             },
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$icons$2d$material$2f$esm$2f$Menu$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                 fileName: "[project]/src/app/dashboard/page.js",
-                                lineNumber: 441,
+                                lineNumber: 440,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/dashboard/page.js",
-                            lineNumber: 434,
+                            lineNumber: 433,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Stack$2f$Stack$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1903,7 +1902,7 @@ function ResponsiveDrawer({ window }) {
                                     percentage: progress.easy.percentage
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/page.js",
-                                    lineNumber: 454,
+                                    lineNumber: 453,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ProgressChip, {
@@ -1913,7 +1912,7 @@ function ResponsiveDrawer({ window }) {
                                     percentage: progress.medium.percentage
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/page.js",
-                                    lineNumber: 460,
+                                    lineNumber: 459,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ProgressChip, {
@@ -1923,7 +1922,7 @@ function ResponsiveDrawer({ window }) {
                                     percentage: progress.tough.percentage
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/page.js",
-                                    lineNumber: 466,
+                                    lineNumber: 465,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Divider$2f$Divider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1936,7 +1935,7 @@ function ResponsiveDrawer({ window }) {
                                     }
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/page.js",
-                                    lineNumber: 472,
+                                    lineNumber: 471,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ProgressChip, {
@@ -1946,13 +1945,13 @@ function ResponsiveDrawer({ window }) {
                                     percentage: progress.overall.percentage
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/page.js",
-                                    lineNumber: 477,
+                                    lineNumber: 476,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/dashboard/page.js",
-                            lineNumber: 444,
+                            lineNumber: 443,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2000,17 +1999,17 @@ function ResponsiveDrawer({ window }) {
                                             children: user?.name?.charAt(0) || "U"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/page.js",
-                                            lineNumber: 510,
+                                            lineNumber: 509,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/dashboard/page.js",
-                                        lineNumber: 488,
+                                        lineNumber: 487,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/dashboard/page.js",
-                                    lineNumber: 487,
+                                    lineNumber: 486,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Menu$2f$Menu$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Menu$3e$__["Menu"], {
@@ -2068,7 +2067,7 @@ function ResponsiveDrawer({ window }) {
                                                     children: user?.name?.charAt(0) || "U"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/page.js",
-                                                    lineNumber: 569,
+                                                    lineNumber: 568,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2080,7 +2079,7 @@ function ResponsiveDrawer({ window }) {
                                                             children: user?.name || "User"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/page.js",
-                                                            lineNumber: 580,
+                                                            lineNumber: 579,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2090,24 +2089,24 @@ function ResponsiveDrawer({ window }) {
                                                             children: user?.email || "user@example.com"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/dashboard/page.js",
-                                                            lineNumber: 583,
+                                                            lineNumber: 582,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/dashboard/page.js",
-                                                    lineNumber: 579,
+                                                    lineNumber: 578,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/page.js",
-                                            lineNumber: 568,
+                                            lineNumber: 567,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Divider$2f$Divider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                             fileName: "[project]/src/app/dashboard/page.js",
-                                            lineNumber: 588,
+                                            lineNumber: 587,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$MenuItem$2f$MenuItem$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MenuItem$3e$__["MenuItem"], {
@@ -2119,12 +2118,12 @@ function ResponsiveDrawer({ window }) {
                                                         color: "error"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/dashboard/page.js",
-                                                        lineNumber: 591,
+                                                        lineNumber: 590,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/page.js",
-                                                    lineNumber: 590,
+                                                    lineNumber: 589,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Typography$2f$Typography$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2132,36 +2131,36 @@ function ResponsiveDrawer({ window }) {
                                                     children: "Logout"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/dashboard/page.js",
-                                                    lineNumber: 593,
+                                                    lineNumber: 592,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/dashboard/page.js",
-                                            lineNumber: 589,
+                                            lineNumber: 588,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/dashboard/page.js",
-                                    lineNumber: 532,
+                                    lineNumber: 531,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/dashboard/page.js",
-                            lineNumber: 485,
+                            lineNumber: 484,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/dashboard/page.js",
-                    lineNumber: 433,
+                    lineNumber: 432,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/page.js",
-                lineNumber: 426,
+                lineNumber: 425,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2200,7 +2199,7 @@ function ResponsiveDrawer({ window }) {
                         children: drawer
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/page.js",
-                        lineNumber: 605,
+                        lineNumber: 604,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Drawer$2f$Drawer$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2219,13 +2218,13 @@ function ResponsiveDrawer({ window }) {
                         children: drawer
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/page.js",
-                        lineNumber: 627,
+                        lineNumber: 626,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/page.js",
-                lineNumber: 599,
+                lineNumber: 598,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Box$2f$Box$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2242,7 +2241,7 @@ function ResponsiveDrawer({ window }) {
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$mui$2f$material$2f$esm$2f$Toolbar$2f$Toolbar$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                         fileName: "[project]/src/app/dashboard/page.js",
-                        lineNumber: 651,
+                        lineNumber: 650,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(SubtopicDetails, {
@@ -2250,19 +2249,19 @@ function ResponsiveDrawer({ window }) {
                         onCompletionChange: handleSubtopicCompletionChange
                     }, void 0, false, {
                         fileName: "[project]/src/app/dashboard/page.js",
-                        lineNumber: 652,
+                        lineNumber: 651,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/page.js",
-                lineNumber: 641,
+                lineNumber: 640,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/dashboard/page.js",
-        lineNumber: 424,
+        lineNumber: 423,
         columnNumber: 5
     }, this);
 }

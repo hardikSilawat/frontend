@@ -1,5 +1,10 @@
 {
   "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/admin/dashboard/page": "app/admin/dashboard/page.js",
+  "/admin/login/page": "app/admin/login/page.js",
+  "/admin/topics/all-topics/page": "app/admin/topics/all-topics/page.js",
+  "/admin/topics/sub-topics/page": "app/admin/topics/sub-topics/page.js",
+  "/admin/users/page": "app/admin/users/page.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/page": "app/page.js"
 }

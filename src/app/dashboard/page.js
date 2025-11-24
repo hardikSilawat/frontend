@@ -255,10 +255,10 @@ function ResponsiveDrawer({ window }) {
         ) : (
           topics.map((topic) => {
             const allSubtasksCompleted = topic.subtopics.every(
-              (st) => st.completed
+              (st) => st.isCompleted
             );
             const someSubtasksCompleted = topic.subtopics.some(
-              (st) => st.completed
+              (st) => st.isCompleted
             );
 
             return (
@@ -273,7 +273,6 @@ function ResponsiveDrawer({ window }) {
                       <CodeIcon />
                     )}
                   </ListItemIcon>
-                  {console.log("topic", topic)}
                   <ListItemText
                     primary={topic.name}
                     primaryTypographyProps={{
