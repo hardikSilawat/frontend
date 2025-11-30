@@ -20,5 +20,9 @@ const UserLoginPage = dynamic(() => import("@/app/(auth)/login/page"), {
 });
 
 export default function Home() {
-  return <UserLoginPage />;
+  return (
+    <>
+      CI / CD <UserLoginPage />
+    </>
+  );
 }
