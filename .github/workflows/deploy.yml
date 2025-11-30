@@ -28,6 +28,13 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ${{ secrets.REMOTE_PATH }}
+            cd ***
             git pull origin main
-            pm2 restart all
+
+            if pm2 list | grep frontend ; then
+              echo "Restarting existing PM2 process"
+              pm2 restart frontend
+            else
+              echo "Starting PM2 process for the first time"
+              pm2 start npm --name "frontend" -- run start
+            fi
